@@ -25,14 +25,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Menu
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <a class="dropdown-item" href="../../">Polish version</a>
-                      <a class="dropdown-item" href="../../versions/static/">Static version</a>
-                    </div>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="../../">Polski</a>
                 </li>
             </ul>
             <span class="navbar-text">
@@ -476,7 +470,7 @@
 
                   var highlighted_year = $("." + charts[i] + ".highlight-year strong").text()
                   unload_accident_counts_by_months(charts[i], () => load_accident_counts_by_days(
-                    "data/" + charts[i] + "-by-days.csv",
+                    "../../data/" + charts[i] + "-by-days.csv",
                     charts[i],
                     2022,
                     settings_dict[charts[i]]["by-days"],
@@ -487,7 +481,7 @@
                     $("." + charts[i] + ".highlight-year strong").html(2022);
                   });
                   unload_accident_counts_by_days(charts[i], () => load_accident_counts_by_months(
-                    "data/" + charts[i] + "-by-days.csv",
+                    "../../data/" + charts[i] + "-by-days.csv",
                     charts[i],
                     settings_dict[charts[i]]["by-months"],
                   ));
@@ -586,12 +580,12 @@
         // change pedestrians-predicted-counts model
         $("#prediction-model-change-chevron").click(function() {
           if ($(this).hasClass("next-linear-regression")) {
-            load_predicted_accident_counts_by_months.chage_chart_dataset("data/pedestrians-linear-regression-predicted-accidents-by-months.csv");
+            load_predicted_accident_counts_by_months.chage_chart_dataset("../../data/pedestrians-linear-regression-predicted-accidents-by-months.csv");
             $(this).removeClass("next-linear-regression").addClass("next-random-forest");
             $("#prediction-model-name").fadeOut(function(){$("#prediction-model-name").html("LinearRegression")});
             $("#prediction-model-name").fadeIn()
           } else if (($(this).hasClass("next-random-forest"))) {
-            load_predicted_accident_counts_by_months.chage_chart_dataset("data/pedestrians-random-forest-predicted-accidents-by-months.csv");
+            load_predicted_accident_counts_by_months.chage_chart_dataset("../../data/pedestrians-random-forest-predicted-accidents-by-months.csv");
             $(this).removeClass("next-random-forest").addClass("next-linear-regression");
             $("#prediction-model-name").fadeOut(function(){$("#prediction-model-name").html("RandomForest")});
             $("#prediction-model-name").fadeIn()
@@ -628,6 +622,7 @@
         load_predicted_accident_counts_by_months.load(
           "../../data/pedestrians-random-forest-predicted-accidents-by-months.csv",
           "pedestrians-predicted-accidents",
+          [new Date('2012-01-01'), new Date('2019-12-01')],
           settings_dict["pedestrians-predicted-accidents"]["by-months"]
         );
 
