@@ -1,5 +1,5 @@
 # Wpływ zmian w prawie na bezpieczeństwo na drogach
-W ciągu ostatnich 20 lat kodeks drogowy w Polsce był wielokrotnie nowelizowany w celu poprawy bezpieczeństwa na drogach. Czy wprowadzone przepisy skutkowały zmniejszeniem liczby wypadków? Jeśli tak, to w jakim stopniu? W niniejszym artykule pod analizę poddaję 3 szeroko komentowane w mediach nowelizacje prawa o ruchu drogowym i prawa karnego. Celami zmian były:
+W ciągu ostatnich 20 lat kodeks drogowy w Polsce był wielokrotnie nowelizowany w celu poprawy bezpieczeństwa na drogach. **Czy wprowadzone przepisy skutkowały zmniejszeniem liczby wypadków? Jeśli tak, to w jakim stopniu?** W niniejszym artykule pod analizę poddaję 3 szeroko komentowane w mediach nowelizacje prawa o ruchu drogowym i prawa karnego. Celami zmian były:
 - poprawa bezpieczeństwa rowerzystów,
 - ograniczenie liczby kierowców prowadzących pod wpływem alkoholu,
 - poprawa bezpieczeństwa pieszych na przejściach dla pieszych.
