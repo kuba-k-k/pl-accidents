@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impact of changes in traffic code and criminal law on road safety</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script type="module" src="../../js/charts.js"></script>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Menu
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <a class="dropdown-item" href="../../">Polish version</a>
+                      <a class="dropdown-item" href="../../versions/static/">Static version</a>
+                    </div>
+                </li>
+            </ul>
+            <span class="navbar-text">
+                <a href="https://github.com/kuba-k-k/pl-accidents"><img src="../../img/github-mark.png" alt="GitHub Logo" class="github-logo"></a>
+            </span>
+        </div>
+    </nav>
+
+    <div class="container mt-4 pb-3">
+        <header class="pb-3">
+            <h1>Impact of changes in traffic code and criminal law on road safety</h1>
+        </header>
+
+        <p>
+          Over the last 20 years, the traffic code in Poland has been amended many times to improve road safety. <strong>Did the introduced regulations result in a reduction in the number of accidents? If so, what was the extent of it?</strong>
+          In this article, I analyze three amendments to the road traffic law and criminal law that were widely commented on in the media. The goals of the changes were:</p>
+        <ul>
+          <li>improving cyclists' safety,</li>
+           <li>reducing the number of drivers driving under the influence of alcohol,</li>
+          <li>improving pedestrian safety at pedestrian crossings.</li>
+        </ul>
+        <p>The Police collects statistical data on road accidents and collisions in the SEWIK (System Ewidencji Wypadków i Kolizji) IT system. The method of data collection is specified in <a href="https://sip.lex.pl/akty-prawne/dzienniki-resortowe/metody-i-formy-leading-prze-policje-statystyki-zdarzen-drogowych-35010522" target=" _blank">order No. 31 of the Chief Commander of the Police of October 22, 2015</a>, which was issued on the basis of the Act of April 6, 1990 on the Police. Available data points include: type of vehicles involved in the incident, road conditions, time and place of the incident as well as its causes. The analyzed period from January 1, 2007 to December 31, 2022 contains over 6.7 million events.</p>
+
+        <h4>Number of accidents in Poland in 2007-2022</h4>
+        <div class="row">
+          <div class="col-11">
+              <div class="w-100" style="height: 300px;" id="total-accidents"></div>
+          </div>
+          <div class="col-1 m-auto">
+            <a class="btn chevron-accidents total-accidents next-accidents-by-days"><i class="h1 bi bi-chevron-compact-right"></i></a>
+          </div>
+        </div>
+        <div class="row total-accidents highlight-year-container">
+          <div class="col text-center">
+            <a class="total-accidents highlight-year-prev-chevron btn"><i class="bi bi-chevron-compact-left"></i></a> <a class="btn"><span class="total-accidents highlight-year"><strong>2022</strong></span></a> <a class="total-accidents highlight-year-next-chevron btn"><i class="bi bi-chevron-compact-right"></i></a>
+          </div>
+        </div>
+        <p>The number of accidents in Poland varies from time to time, the highest number of accidents during the year is most often observed in October and the lowest in February. The largest decline was observed in April 2020, which is most likely the result of the first lockdown introduced due to the COVID-19 pandemic.</p>
+
+        <h4>Places and types of accidents <a id="accidents-general-details-chevron" class="accidents-general-details-show dynamic-tooltip small" style="cursor: pointer;">(see more)</a></h4>
+        <div class="row py-3" id="accidents-general-details">
+          <div class="col-5" id="accidents-map">
+            <img src="../../img/accidents_map.jpg" alt="" style="width: 100%">
+          </div>
+          <div class="col-7">
+            <div id="accidents-by-type"></div>
+          </div>
+        </div>
+        <p>During the analyzed period, 17,000 people died on the roads, and over 134,000 were injured. Side or rear collisions most often occurred, and over 30% of events took place in provincial cities.</p>
+
+        <h4>Accidents involving bicycles (2007-2022)</h4>
+        <p>In 2011, <a href="https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=wdu20110920530" target="_blank">act</a> of 1 In April 2011, changes were introduced regarding the use of roads by cyclists. The Act entered into force on May 21, 2011, introducing many important changes regarding cyclists and drivers and their shared use of roads. The most important was that when turning onto a cross road, the driver should give way to a cyclist riding on a bicycle path along the road. Cyclists are allowed to overtake slower vehicles on their right (e.g. in traffic jams). From now on, cyclists had the right to ride in the middle of the lane at an intersection, which reduced the risk of being overtaken at too short a distance. The use of bicycle strollers, e.g. for children, is allowed. Cyclists are allowed to ride side by side as long as it does not impede the traffic of other vehicles. Separated bicycle lanes and bicycle locks were also introduced.</p>
+        <div class="row">
+          <div class="col-11">
+              <div class="w-100" style="height: 300px;" id="bicycle-accidents"></div>
+          </div>
+          <div class="col-1 m-auto">
+            <a class="btn chevron-accidents bicycle-accidents next-accidents-by-days"><i class="h1 bi bi-chevron-compact-right"></i></a>
+          </div>
+        </div>
+        <div class="row bicycle-accidents highlight-year-container">
+          <div class="col text-center">
+            <a class="bicycle-accidents highlight-year-prev-chevron btn"><i class="bi bi-chevron-compact-left"></i></a> <a class="btn"><span class="bicycle-accidents highlight-year"><strong>2022</strong></span></a> <a class="bicycle-accidents highlight-year-next-chevron btn"><i class="bi bi-chevron-compact-right"></i></a>
+          </div>
+        </div>
+        <p>The number of events involving bicycles varies from time to time - it depends on the weather, which affects the number of cyclists on the roads. <strong>No decrease in the absolute number of accidents can be observed after the discussed amendment to the traffic code</strong>.
+          The situation is similar if we check the share of accidents involving cyclists in the total number of accidents. <a id="bicycle-stats-button" class="dynamic-tooltip show" style="cursor: pointer;">(see stats)</a></p>
+        <div class="row" id="bicycle-stats">
+          <div class="col">
+            <table class="table small w-100">
+              <thead>
+                <tr class="table-secondary">
+                  <th>Period</th>
+                  <th class="text-center">Average monthly number of accidents involving bicycles</th>
+                  <th class="text-center">Serious injuries or death as a result of events (average / month)</th>
+                  <th class="text-center">Average share of accidents involving bicycles in the total number of accidents</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>year preceding the entry into force of changes in regulations<br>(21/05/2010 - 20/05/2011)</td>
+                  <td class="text-center">850</td>
+                  <td class="text-center">15</td>
+                  <td class="text-center">2.3%</td>
+                </tr>
+                <tr>
+                  <td>one year from the entry into force of changes in regulations<br>(21/05/2011 - 20/05/2012)</td>
+                  <td class="text-center">994</td>
+                  <td class="text-center">16</td>
+                  <td class="text-center">3.0%</td>
+                </tr>
+                <tr>
+                  <td>in the following years<br>(21/05/2012 - 20/05/2022)</td>
+                  <td class="text-center">1140</td>
+                  <td class="text-center">17</td>
+                  <td class="text-center">3.2%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h4>Accidents under the influence of alcohol (2007-2022)</h4>
+        <p>On March 20, 2015, <a href="https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20150000541" target="_blank">regulations</a> regarding driving under the influence of alcohol were introduced. This amendment increased financial penalties and the scope of situations in which the Police may deprive a driver of a driving license. The changes particularly affected drivers driving under the influence of alcohol. Such an act was punishable by up to PLN 10,000. PLN (paid to the Victims' Assistance Fund). Additionally, if someone had already been convicted of this crime, the court could now impose a lifelong driving ban - and breaking it became a crime punishable by imprisonment for up to 2 years. In turn, in the case of a single offense, the court may impose a driving ban from 2 to even 15 years.</p>
+        <div class="row">
+          <div class="col-11">
+              <div class="w-100" style="height: 300px;" id="alcohol-accidents"></div>
+          </div>
+          <div class="col-1 m-auto">
+            <a class="btn chevron-accidents alcohol-accidents next-accidents-by-days"><i class="h1 bi bi-chevron-compact-right"></i></a>
+          </div>
+        </div>
+        <div class="row alcohol-accidents highlight-year-container">
+          <div class="col text-center">
+            <a class="alcohol-accidents highlight-year-prev-chevron btn"><i class="bi bi-chevron-compact-left"></i></a> <a class="btn"><span class="alcohol-accidents highlight-year"><strong>2022</strong></span></a> <a class="alcohol-accidents highlight-year-next-chevron btn"><i class="bi bi-chevron-compact-right"></i></a>
+          </div>
+        </div>
+        <p>The tightening of the regulations was introduced at a time when the number of incidents involving participants under the influence of alcohol was much lower than in previous years. A year later, recorded cases of this type began to increase again. <strong>Therefore, there is no decrease in the number of events after this amendment</strong>. <a id="alcohol-stats-button" class="dynamic-tooltip show" style="cursor: pointer;">(see stats)</a></p>
+        <div class="row" id="alcohol-stats">
+          <div class="col">
+            <table class="table small w-100">
+              <thead>
+                <tr class="table-secondary">
+                  <th>Period</th>
+                  <th class="text-center">Average monthly number of accidents involving drivers under the influence of alcohol</th>
+                  <th class="text-center">Serious injuries or death as a result of events (average / month)</th>
+                  <th class="text-center">Average share of accidents involving drivers under the influence of alcohol in the total number of accidents</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>year preceding the entry into force of changes in regulations<br>(18/05/2014 - 17/05/2015)</td>
+                  <td class="text-center">853</td>
+                  <td class="text-center">14</td>
+                  <td class="text-center">2.6%</td>
+                </tr>
+                <tr>
+                  <td>one year from the entry into force of changes in regulations<br>(18/05/2015 - 17/05/2016)</td>
+                  <td class="text-center">774</td>
+                  <td class="text-center">11</td>
+                  <td class="text-center">2.3%</td>
+                </tr>
+                <tr>
+                  <td>in the following years<br>(18/05/2016 - 17/05/2022)</td>
+                  <td class="text-center">955</td>
+                  <td class="text-center">8</td>
+                  <td class="text-center">2.5%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h4>Accidents at pedestrian crossings (2007-2022)</h4>
+        <p>On June 1, 2021, <a href="https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20210000463" target="_blank">changes in regulations entered into force</a> regarding crossing a pedestrian crossing. Article 13 of the Road Traffic Act has changed its wording quite significantly. Before the changes, pedestrians who were already on the crosswalk had priority. The driver of the vehicle had to allow him to do so, i.e. stop and let him pass. If neither vehicle yielded to the pedestrian, there could be no priority. The legislator decided that this was insufficient protection and after changing the regulations, pedestrians have priority before entering the road or tracks. If only a pedestrian shows an intention to enter the crosswalk, the vehicle driver should stop. This amendment was aimed at increasing the safety of pedestrians at pedestrian crossings by increasing their rights.</p>
+        <div class="row">
+          <div class="col-11">
+              <div class="w-100" style="height: 300px;" id="pedestrians-accidents"></div>
+          </div>
+          <div class="col-1 m-auto">
+            <a class="btn chevron-accidents pedestrians-accidents next-accidents-by-days"><i class="h1 bi bi-chevron-compact-right"></i></a>
+          </div>
+        </div>
+        <div class="row pedestrians-accidents highlight-year-container">
+          <div class="col text-center">
+            <a class="pedestrians-accidents highlight-year-prev-chevron btn"><i class="bi bi-chevron-compact-left"></i></a> <a class="btn"><span class="pedestrians-accidents highlight-year"><strong>2022</strong></span></a> <a class="pedestrians-accidents highlight-year-next-chevron btn"><i class="bi bi-chevron-compact-right"></i></a>
+          </div>
+        </div>
+
+        <p>The new regulations were introduced during the COVID-19 pandemic, shortly after the lifting of the restrictions of March 25, 2021 (including the reopening of nurseries and kindergartens). The number of accidents involving pedestrians at pedestrian crossings decreased significantly already in 2020. However, much more in the autumn and winter period. Is it a matter of new regulations, reduced traffic or milder weather conditions?</p>
+        <p>Road conditions certainly influence the number of accidents. To estimate this impact on the number of analyzed accidents at pedestrian crossings, I calculate <a style="cursor: pointer;" id="pearson-definition-button" class="show dynamic-tooltip">Pearson correlation coefficient</a> for selected measures of weather and road conditions.</p>
+        <div id="pearson-definition" class="alert alert-secondary small" role="alert">
+          <strong>Pearson correlation coefficient</strong> determines the level of linear relationship between random variables. The value of the coefficient ranges from -1 to 1, where 1 means total positive linear correlation, 0 means no linear correlation, and -1 means total negative linear correlation.
+          Below is the formula for the Pearson correlation coefficient r between two variables X and Y.
+          <p>$$
+            r = \frac{\sum (X_i - \bar{X})(Y_i - \bar{Y})}{\sqrt{\sum (X_i - \bar{X})^2 \sum (Y_i - \bar{Y})^2}}
+          $$</p>
+          <ul>
+            <li>\(X_i\) i \(Y_i\) are individual sample points indexed by i,</li>
+            <li>\(\bar{X}\) i \(\bar{Y}\) are the means of variables X and Y,</li>
+            <li>the numerator represents the covariance between X and Y,</li>
+            <li>the denominator is the product of the standard deviations of X and Y.</li>
+          </ul>
+          It is important to note that the Pearson correlation only measures linear relationships and may falsely describe or fail to detect non-linear relationships. Furthermore, correlation does not imply causation - it only suggests the degree of association between two variables.
+          When comparing different ranges of absolute values of the Pearson r coefficient used to interpret the obtained results, we must take into account the field of science in which we conduct research. We will consider a different correlation result to be strong in medicine and another in sociology.
+          For example, for social sciences, ideal correlation is a coefficient of 1, strong - 0.6 to 0.9, moderate - 0.4 - 0.6, weak - below 0.3, and 0 is no correlation at all.
+        </div>
+        <table class="table small w-50">
+          <thead class="table-secondary">
+            <tr><th>Variable</th><th>r-Pearson</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Mean monthly maximum temperature</td><td>-0.59</td></tr>
+            <tr><td>Average monthly minimum temperature</td><td>-0.50</td></tr>
+            <tr><td>Mean monthly daily temperature</td><td>-0.56</td></tr>
+            <tr><td>Average monthly minimum temperature at the ground</td><td>-0.42</td></tr>
+            <tr><td>Average monthly rainfall</td><td>-0.17</td></tr>
+            <tr><td>Number of days with snow cover per month</td><td>0.29</td></tr>
+            <tr><td>Number of days with rainfall in a month</td><td>-0.11</td></tr>
+            <tr><td>Number of days with snowfall in the month</td><td>0.42</td></tr>
+            <tr><td>Monthly average daily vehicle traffic</td><td>-0.26</td></tr>
+          </tbody>
+        </table>
+        <p>
+          Although empirically the selection of variables makes sense, the Pearson coefficient for only 5 out of 9 indicates a moderate correlation, for the remaining 4 - a weak one. Can specific combination of variables influence the number of accidents? For example, rainfall at a temperature close to zero degrees causes black ice, and thus difficult road conditions - which undoubtedly increases the number of accidents in the area affected by this phenomenon.
+          To examine the impact of multiple variables on the target variable, in this case the number of accidents, I will use two popular machine learning methods.
+          <ul>
+            <li><a style="cursor: pointer;" id="random-forest-definition-button" class="show dynamic-tooltip">Random Forest</a>,</li>
+            <div id="random-forest-definition" class="mt-3 alert alert-secondary small" role="alert">
+            The RandomForest algorithm is based on the concept of decision trees, but instead of relying on a single decision tree, it creates a "forest" of them. Each tree in the forest is built from a random sample of the training data set, and a subset of features is randomly selected at each node to determine the split. The final prediction is made by aggregating predictions from all trees in the forest. This approach significantly increases the accuracy of the model compared to individual decision trees. We can describe the model training process in the following steps.
+              <ul>
+                <li>Bootstrap Aggregating (Bagging)</li>
+                <li>Feature Randomness</li>
+                <li>Aggregation</li>
+              </ul>
+              <br>
+              RandomForest is valued for its high accuracy, resistance to overfitting, and ability to handle large, multidimensional data sets. It is also an explainable machine learning method.
+            </div>
+            <li><a style="cursor: pointer;" id="linear-regression-definition-button" class="show">Linear Regression</a>.</li>
+            <div id="linear-regression-definition" class="mt-3 alert alert-secondary small" role="alert">
+              Linear regression is a method based on linear combinations of variables and parameters that fit the model to the data. The fitted regression line or curve represents the estimated expected value of a variable given specific values of the other variable or variables.
+              <p>$$
+                y = \beta_0 + \beta_1x_1 + \beta_2x_2 + ... + \beta_nx_n + \epsilon
+              $$</p>
+              <ul>
+                <li>\(y\) is dependent variable,</li>
+                <li>\(x_1, x_2, ..., x_n\) are independent variables,</li>
+                <li>\(\beta_0\) is the intercept of the regression line,</li>
+                <li>\(\beta_1, \beta_2, ..., \beta_n\) are slopes of regression lines,</li>
+                <li>\(\epsilon\) is the error term, accounting for the variability in y not explained by x.</li>
+              </ul>
+              <br>
+              The primary goal of linear regression is to find the best-fitting line through the data points that minimizes the differences between the observed values and the values predicted by the model.
+            </div>
+          </ul>
+        </p>
+        <p>
+          I'm training models on data from 2012-2019 to include the impact of weather variables and road traffic, and ignore the impact of lockdowns (2020, 2021) and new provisions of the traffic code (2021).
+          In the following step, I'm using models to forecast the number of accidents in 2020-2022 and compare the actual results to the forecasts to assess the impact of both the pandemic and changes in the law.
+        </p>
+
+        <h5>Comparison of the actual number of accidents with predictions <em><span id="prediction-model-name">RandomForest</span></em> <a id="prediction-model-change-chevron" class="next-linear-regression" style="cursor: pointer;"><span class="small dynamic-tooltip">(change model)</span></a></h5>
+        <div class="row pt-3">
+          <div class="col">
+              <div class="w-100" style="height: 300px;" id="pedestrians-predicted-accidents"></div>
+          </div>
+        </div>
+        <div class="row pedestrians-predicted-accidents highlight-year-container">
+          <div class="col text-center">
+            <a class="pedestrians-predicted-accidents highlight-year-prev-chevron btn"><i class="bi bi-chevron-compact-left"></i></a> <a class="btn"><span class="pedestrians-predicted-accidents highlight-year"><strong>2012-2019</strong></span></a> <a class="pedestrians-predicted-accidents highlight-year-next-chevron btn"><i class="bi bi-chevron-compact-right"></i></a>
+          </div>
+        </div>
+        <p>Prediction quality measures for 2012-2019 are high for both models. <a style="cursor: pointer;" id="mse-definition-button" class="show dynamic-tooltip">The mean square error</a> for the RandomForest model is 3860, and the coefficient of determination is <a style="cursor: pointer;" id="r2-definition-button" class="show dynamic-tooltip">R²</a> - 0.92. For the linear regression model, 2513 and 0.95, respectively. RandomForest, like other decision tree methods, has difficulty extrapolating to data points underrepresented in the training data, hence underestimating peak values. Similarly, in the case of linear regression, since this model assumes a strictly linear relationship between the variables, and the data I used is not, the predictions of the lowest values are reflected incorrectly.</p>
+        <div id="mse-definition" class="alert alert-secondary small" role="alert">
+          <strong>Mean Squared Error / MSE</strong> is the expected value of the square of the "error", i.e. the difference between the estimate and the predicted value. The lower the MSE, the better the fit of the model to the data.
+          <p>$$
+            \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+          $$</p>
+          <ul>
+            <li>\(n\) is the number of observations,</li>
+            <li>\(y_i\) is the actual value of the observation,</li>
+            <li>\(\hat{y}_i\) is predicted value.</li>
+          </ul>
+          MSE is a simple metric used, among others, for: for comparing models, the one with the lowest MSE is usually considered the most accurate. However, because MSE is expressed in squared units of the outcome variable, direct interpretation of error magnitudes can sometimes be challenging.
+        </div>
+        <div id="r2-definition" class="alert alert-secondary small" role="alert">
+          <strong>The coefficient of determination R²</strong> is a statistical measure that represents the proportion of the variance in the dependent variable explained by the independent variables in a regression model. Provides information about the degree of model fit. An R² of 1 indicates that the predictions fit the data perfectly.
+          <p>$$
+            R^2 = 1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} (y_i - \bar{y})^2}
+          $$</p>
+          <ul>
+            <li>\(y_i\) is the actual value of the observation,</li>
+            <li>\(\hat{y}_i\) is the predicted value,</li>
+            <li>\(\bar{y}\) is the arithmetic mean of the actual values.</li>
+          </ul>
+          R² is a measure of how well the observational results are replicated by the model. This measure is often interpreted as the percentage of variability that is explained by the model.
+          R² values range from 0 to 1, with a higher value indicating a better fit of the model to the data.
+        </div>
+        <p>
+          Both models (trained on data from 2012-2019) predict a higher number of analyzed accidents after the regulations enter into force, which may indicate a positive impact of the new law on the number of accidents. However, I would like to draw attention to the fact that in order to justify this thesis more precisely, it would be necessary to examine the correlation between the number of events and weather and road conditions on a daily basis, preferably in close proximity to the weather measurement station.
+          Regardless of the strength of the evidence for a decrease in the number of accidents at pedestrian crossings, it would be very difficult to state unequivocally that this is solely due to the regulations introduced on June 1, 2021. We cannot ignore the impact of both the pandemic and the related change in people's behavior and a significant update of the ticket tariff from January 1, 2022
+        </p>
+
+        <h4>Bonus. Do police officers get tickets?</h4>
+        <p>In the event of an accident that is the driver's fault, if the driver is an ordinary citizen, in 6% of cases he receives a warning, and in almost 70% of cases he is fined. If the driver is a policeman, he has a 50% chance of being instructed, and only in 37% of cases he receives a ticket - that's almost twice as many fines than for ordinary citizens.</p>
+        <div class="row">
+          <div class="col">
+              <div class="w-100" style="height: 300px;" id="police-penalties"></div>
+          </div>
+        </div>
+        <br>
+
+        <h4>Sources</h4>
+        <p class="mb-1">Data</p>
+        <div class="border-bottom w-100 px-1 mb-1"></div>
+
+        <ol style="padding-left: 18px;">
+          <li><a href="https://sewik.pl/" target="_blank">Dane Systemu Ewidencji Wypadków i Kolizji udostępnione przez Komendę Główną Policji w Warszawie</a>. Zakres od 2007-01-01 do 2022-12-31.</li>
+          <li><a href="https://dane.imgw.pl/" target="_blank">Dane Pomiarowo obserwacyjne udostępnione przez Instytut Meteorologii i Gospodarki Wodnej</a>. Zakres od 2007-01-01 do 2022-12-31.</li>
+          <li><a href="https://www.archiwum.gddkia.gov.pl/pl/" target="_blank">Dane Stacji Ciągłych Pomiarów Ruchu udostępnione przez Generalną Dyrekcję Dróg Krajowych i Autostrad</a>. Zakres od 2012-01-01 do 2022-12-31.</li>
+        </ol>
+
+        <p class="mb-1">Regulations</p>
+        <div class="border-bottom w-100 px-1 mb-1"></div>
+        <ol style="padding-left: 18px;">
+          <li><a href="https://sip.lex.pl/akty-prawne/dzienniki-resortowe/metody-i-formy-prowadzenia-przez-policje-statystyki-zdarzen-drogowych-35010522" target="_blank">Zarządzenie Nr 31 Komendanta Głównego Policji z dnia 22 października 2015 r. w sprawie metod i form prowadzenia przez Policję statystyki zdarzeń drogowych</a></li>
+          <li><a href="https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=wdu20110920530" target="_blank">Ustawa z dnia 1 kwietnia 2011 r. o zmianie ustawy - Prawo o ruchu drogowym oraz ustawy o kierujących pojazdami</a></li>
+          <li><a href="https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20150000541" target="_blank">Ustawa z dnia 20 marca 2015 r. o zmianie ustawy - Kodeks karny oraz niektórych innych ustaw</a></li>
+          <li><a href="https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20210000463" target="_blank">Ustawa z dnia 25 lutego 2021 r. o zmianie ustawy - Prawo o ruchu drogowym</a></li>
+        </ol>
+        <br>
+
+    </div>
+
+
+    <script src="../../js/tooltip.js"></script>
+
+    <script type="module">
+      var charts = ["total-accidents", "bicycle-accidents", "alcohol-accidents", "pedestrians-accidents"];
+      var settings_dict = {
+        "total-accidents": {
+          "by-months": {
+            "remarks": [{
+                  "type": "area",
+                  "date-from": new Date("2020-03-14"),
+                  "date-to": new Date("2022-05-15"),
+                  "text-upper": "Stan epidemii",
+                  "text-lower": "(14/03/2020 - 15/05/2022)",
+                  "text-position": "middle-bottom",
+                },],
+            "legend-position": "left-bottom"
+          },
+          "by-days": {
+            "remarks": [{
+                  "type": "area",
+                  "years": [2020],
+                  "date-from": new Date("2021-03-14"),
+                  "date-to": new Date("2021-04-20"),
+                  "text-upper": "Lockdown",
+                  "text-lower": "(14/03/2020 - 20/04/2020)",
+                  "text-position": "middle-bottom",
+                },
+              ],
+            "legend-position": "right-bottom"
+          },
+        },
+        "bicycle-accidents": {
+          "by-months": {
+            "remarks": [{
+                  "type": "line",
+                  "date": new Date("2011-05-21"),
+                  "text-upper": "Data wejścia w życie",
+                  "text-lower": "21/05/2011",
+                  "text-position": "start-top",
+                },
+              ],
+            "legend-position": "left-top"
+          },
+          "by-days": {
+            "remarks": [],
+            "legend-position": "left-top"
+          },
+        },
+        "alcohol-accidents": {
+          "by-months": {
+            "remarks": [{
+                  "type": "line",
+                  "date": new Date("2015-05-18"),
+                  "text-upper": "Data wejścia w życie",
+                  "text-lower": "18/05/2015",
+                  "text-position": "start-top",
+                },
+              ],
+            "legend-position": "left-bottom"
+          },
+          "by-days": {
+            "remarks": [],
+            "legend-position": "right-top"
+          },
+        },
+        "pedestrians-accidents": {
+          "by-months": {
+            "remarks": [{
+                  "type": "line",
+                  "date": new Date("2021-06-01"),
+                  "text-upper": "Data wejścia w życie",
+                  "text-lower": "01/06/2021",
+                  "text-position": "start-top",
+                },
+              ],
+            "legend-position": "left-top"
+          },
+          "by-days": {
+            "remarks": [],
+            "legend-position": "left-top"
+          },
+        },
+        "pedestrians-predicted-accidents": {
+          "by-months": {
+            "remarks": [{
+                  "type": "line",
+                  "date": new Date("2021-06-01"),
+                  "text-upper": "Data wejścia w życie",
+                  "text-lower": "01/06/2021",
+                  "text-position": "start-top",
+                },
+              ],
+            "legend-position": "left-top"
+          },
+        },
+      }
+
+      for (var i = 0; i < charts.length; i++) {
+        $("." + charts[i] + ".highlight-year-container").hide()
+      }
+      $("#accidents-general-details").hide()
+      $("#bicycle-stats").hide()
+      $("#alcohol-stats").hide()
+      $("#pearson-definition").hide()
+      $("#random-forest-definition").hide()
+      $("#linear-regression-definition").hide()
+      $("#mse-definition").hide()
+      $("#r2-definition").hide()
+
+      import { load_accident_counts_by_months } from '../../js/charts.js';
+      import { unload_accident_counts_by_months } from '../../js/charts.js';
+      import { load_accident_counts_by_days } from '../../js/charts.js';
+      import { unload_accident_counts_by_days } from '../../js/charts.js';
+      import { change_accident_counts_by_days } from '../../js/charts.js';
+      import { load_accidents_by_types } from '../../js/charts.js';
+      import { load_predicted_accident_counts_by_months } from '../../js/charts.js';
+      import { load_police_penalties_chart } from '../../js/charts.js';
+
+
+      $(document).ready(function() {
+        // functions
+        $('.chevron-accidents').click(function() {
+            for (var i = 0; i < charts.length; i++) {
+              if ($(this).hasClass(charts[i])) {
+                if ($(this).hasClass("next-accidents-by-days")) {
+
+                  var highlighted_year = $("." + charts[i] + ".highlight-year strong").text()
+                  unload_accident_counts_by_months(charts[i], () => load_accident_counts_by_days(
+                    "data/" + charts[i] + "-by-days.csv",
+                    charts[i],
+                    2022,
+                    settings_dict[charts[i]]["by-days"],
+                  ));
+                  $("." + charts[i] + ".highlight-year-container").slideDown();
+                } else {
+                  $("." + charts[i] + ".highlight-year-container").slideUp(function (){
+                    $("." + charts[i] + ".highlight-year strong").html(2022);
+                  });
+                  unload_accident_counts_by_days(charts[i], () => load_accident_counts_by_months(
+                    "data/" + charts[i] + "-by-days.csv",
+                    charts[i],
+                    settings_dict[charts[i]]["by-months"],
+                  ));
+                }
+                break;
+              }
+            }
+            $(this).toggleClass("next-accidents-by-days", "next-accidents-by-months");
+        });
+
+        // highlighted year switch
+        $('.highlight-year-prev-chevron').click(function() {
+          for (var i = 0; i < charts.length; i++) {
+            if ($(this).hasClass(charts[i])) {
+              var highlighted_year = $("." + charts[i] + " .highlight-year strong").text()
+              if (highlighted_year==2007) {highlighted_year = 2022;}
+              else {highlighted_year--;}
+              $("." + charts[i] + " .highlight-year strong").html(highlighted_year);
+              change_accident_counts_by_days(charts[i], highlighted_year, settings_dict[charts[i]]["by-days"]);
+              break;
+            }
+          }
+        });
+        $('.highlight-year-next-chevron').click(function() {
+          for (var i = 0; i < charts.length; i++) {
+            if ($(this).hasClass(charts[i])) {
+              var highlighted_year = $("." + charts[i] + " .highlight-year strong").text()
+              if (highlighted_year==2022) {highlighted_year = 2007;}
+              else {highlighted_year++;}
+              $("." + charts[i] + " .highlight-year strong").html(highlighted_year);
+              change_accident_counts_by_days(charts[i], highlighted_year, settings_dict[charts[i]]["by-days"]);
+              break;
+            }
+          }
+        });
+
+        // map & types unhide
+        $('#accidents-general-details-chevron').click(function() {
+            if ($(this).hasClass("accidents-general-details-show")) {
+              $("#accidents-general-details").slideDown(function(){
+                load_accidents_by_types("../../data/accidents-by-types.csv");
+              });
+            }
+            $(this).toggleClass("accidents-general-details-show", "accidents-general-details-hide");
+        });
+
+        // stats unhide/hide
+        $("a[id$='-stats-button']").click(function() {
+            if ($(this).hasClass("show")) {
+              $("#" + this.id.replace(/-button$/, '')).slideDown();
+              $(this).removeClass("show").addClass("hide");
+            } else {
+              $("#" + this.id.replace(/-button$/, '')).slideUp();
+              $(this).removeClass("hide").addClass("show");
+            }
+        });
+
+        // definitions unhide/hide
+        $("a[id$='-definition-button']").click(function() {
+            if ($(this).hasClass("show")) {
+              $("#" + this.id.replace(/-button$/, '')).slideDown();
+              $(this).removeClass("show").addClass("hide");
+            } else {
+              $("#" + this.id.replace(/-button$/, '')).slideUp();
+              $(this).removeClass("hide").addClass("show");
+            }
+        });
+
+        // change pedestrians-predicted-counts domain
+        const periodMappingsPrev = {
+          "2012-2019": {newDomain: [new Date('2020-01-01'), new Date('2022-12-01')], newPeriod: "2020-2022"},
+          "2020-2022": {newDomain: [new Date('2012-01-01'), new Date('2022-12-01')], newPeriod: "2012-2022"},
+          "2012-2022": {newDomain: [new Date('2012-01-01'), new Date('2019-12-01')], newPeriod: "2012-2019"},
+        };
+        $(".pedestrians-predicted-accidents.highlight-year-prev-chevron").click(function() {
+          const chosenPeriod = $(".pedestrians-predicted-accidents.highlight-year strong").text();
+          const { newDomain, newPeriod } = periodMappingsPrev[chosenPeriod] || {};
+
+          $(".pedestrians-predicted-accidents.highlight-year strong").html(newPeriod);
+          load_predicted_accident_counts_by_months.change_chart_domain(newDomain);
+        });
+
+        const periodMappingsNext = {
+          "2012-2019": {newDomain: [new Date('2012-01-01'), new Date('2022-12-01')], newPeriod: "2012-2022"},
+          "2012-2022": {newDomain: [new Date('2020-01-01'), new Date('2022-12-01')], newPeriod: "2020-2022"},
+          "2020-2022": {newDomain: [new Date('2012-01-01'), new Date('2019-12-01')], newPeriod: "2012-2019"}
+        };
+        $(".pedestrians-predicted-accidents.highlight-year-next-chevron").click(function() {
+          const chosenPeriod = $(".pedestrians-predicted-accidents.highlight-year strong").text();
+          const { newDomain, newPeriod } = periodMappingsNext[chosenPeriod] || {};
+
+          $(".pedestrians-predicted-accidents.highlight-year strong").html(newPeriod);
+          load_predicted_accident_counts_by_months.change_chart_domain(newDomain);
+        });
+
+        // change pedestrians-predicted-counts model
+        $("#prediction-model-change-chevron").click(function() {
+          if ($(this).hasClass("next-linear-regression")) {
+            load_predicted_accident_counts_by_months.chage_chart_dataset("data/pedestrians-linear-regression-predicted-accidents-by-months.csv");
+            $(this).removeClass("next-linear-regression").addClass("next-random-forest");
+            $("#prediction-model-name").fadeOut(function(){$("#prediction-model-name").html("LinearRegression")});
+            $("#prediction-model-name").fadeIn()
+          } else if (($(this).hasClass("next-random-forest"))) {
+            load_predicted_accident_counts_by_months.chage_chart_dataset("data/pedestrians-random-forest-predicted-accidents-by-months.csv");
+            $(this).removeClass("next-random-forest").addClass("next-linear-regression");
+            $("#prediction-model-name").fadeOut(function(){$("#prediction-model-name").html("RandomForest")});
+            $("#prediction-model-name").fadeIn()
+          }
+        });
+
+
+
+        // presentation order
+        load_accident_counts_by_months(
+          "../../data/total-accidents-by-days.csv",
+          "total-accidents",
+          settings_dict["total-accidents"]["by-months"],
+        );
+
+        load_accident_counts_by_months(
+          "../../data/bicycle-accidents-by-days.csv",
+          "bicycle-accidents",
+          settings_dict["bicycle-accidents"]["by-months"],
+        );
+
+        load_accident_counts_by_months(
+          "../../data/alcohol-accidents-by-days.csv",
+          "alcohol-accidents",
+          settings_dict["alcohol-accidents"]["by-months"],
+        );
+
+        load_accident_counts_by_months(
+          "../../data/pedestrians-accidents-by-days.csv",
+          "pedestrians-accidents",
+          settings_dict["pedestrians-accidents"]["by-months"],
+        );
+
+        load_predicted_accident_counts_by_months.load(
+          "../../data/pedestrians-random-forest-predicted-accidents-by-months.csv",
+          "pedestrians-predicted-accidents",
+          settings_dict["pedestrians-predicted-accidents"]["by-months"]
+        );
+
+        load_police_penalties_chart(
+          "../../data/police-penalties.csv",
+          "police-penalties"
+        )
+
+      });
+    </script>
+
+    <script type="text/javascript" src="../../js/tooltip.js"></script>
+
+</body>
+</html>

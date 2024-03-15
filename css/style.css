@@ -1,0 +1,31 @@
+.github-logo {
+    height: 32px; /* Adjust size as needed */
+    width: auto;
+}
+
+.tooltip {
+  position: absolute;
+  background-color: #FFBF00;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  visibility: hidden;
+  transition: opacity 0.5s, visibility 0.5s;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; visibility: hidden; }
+  100% { opacity: 1; visibility: visible; }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+@keyframes shake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-4px); }
+  40%, 60% { transform: translateX(4px); }
+}

@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wpływ zmian w prawie na bezpieczeństwo na drogach</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script type="module" src="../../js/charts.js"></script>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../../css/style.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Menu
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <a class="dropdown-item" href="../../">Werjsa polska</a>
+                      <a class="dropdown-item" href="../../versions/en/">Wersja angielska</a>
+                    </div>
+                </li>
+            </ul>
+            <span class="navbar-text">
+                <a href="https://github.com/kuba-k-k/pl-accidents"><img src="../../img/github-mark.png" alt="GitHub Logo" class="github-logo"></a>
+            </span>
+        </div>
+    </nav>
+
+    <div class="container mt-4 pb-3">
+        <header class="pb-3">
+            <h1>Wpływ zmian w prawie na bezpieczeństwo na drogach</h1>
+        </header>
+
+        <p>
+          W ciągu ostatnich 20 lat kodeks drogowy w Polsce był wielokrotnie nowelizowany w celu poprawy bezpieczeństwa na drogach. <strong>Czy wprowadzone przepisy skutkowały zmniejszeniem liczby wypadków? Jeśli tak, to w jakim stopniu?</strong>
+          W niniejszym artykule pod analizę poddaję 3 szeroko komentowane w mediach nowelizacje prawa o ruchu drogowym i prawa karnego. Celami zmian były:</p>
+        <ul>
+          <li>poprawa bezpieczeństwa rowerzystów,</li>
+          <li>ograniczenie liczby kierowców prowadzących pod wpływem alkoholu,</li>
+          <li>poprawa bezpieczeństwa pieszych na przejściach dla pieszych.</li>
+        </ul>
+        <p>Policja gromadzi dane statystyczne dotyczące wypadków i kolizji drogowych w systemie informatycznym SEWIK (System Ewidencji Wypadków i Kolizji). Sposób gromadzenia danych określa <a href="https://sip.lex.pl/akty-prawne/dzienniki-resortowe/metody-i-formy-prowadzenia-przez-policje-statystyki-zdarzen-drogowych-35010522" target="_blank">zarządzenie nr 31 Komendanta Głównego Policji z dnia 22 października 2015 r.</a>, które zostało wydane na podstawie ustawy z dnia 6 kwietnia 1990 r. o Policji (z późniejszymi zmianami). Dostępne punkty danych to m. in. typ pojazdów biorących udział w zdarzeniu, warunki drogowe, czas i miejsce zdarzenia jak również jego przyczyny. Analizowany okres od 1 stycznia 2007 roku do 31 grudnia 2022 roku zawiera ponad 6,7 mln zdarzeń.</p>
+
+        <h4>Liczba wypadków w Polsce w latach 2007-2022</h4>
+        <div class="row">
+          <div class="col-11">
+              <div class="w-100" style="height: 300px;" id="total-accidents"></div>
+          </div>
+        </div>
+        <h6 class="pt-3">Dzienna liczba wypadków w Polsce w roku 2020 na tle pozostałych lat</h6>
+        <div class="row">
+          <div class="col-11">
+              <div class="w-100" style="height: 300px;" id="total-accidents-by-days"></div>
+          </div>
+        </div>
+        <p>Liczba wypadków w Polsce jest okresowo zmienna, najwyższą liczbę wypadków w ciągu roku obserwujemy najczęściej w październiku, a najniższą w lutym. Największy spadek mogliśmy zaobserwować w kwietniu 2020 roku, co najprawdopodobniej jest efektem pierwszego lockdownu wprowadzonego z powodu pandemii COVID-19.</p>
+
+        <h4>Miejsca i typy wypadków</h4>
+        <div class="row py-3" id="accidents-general-details">
+          <div class="col-5" id="accidents-map">
+            <img src="../../img/accidents_map.jpg" alt="" style="width: 100%">
+          </div>
+          <div class="col-6">
+            <div id="accidents-by-type"></div>
+          </div>
+        </div>
+        <p> W analizowanym okresie, na drogach zginęło 17 tys. osób, a ponad 134 tys. zostało rannych. Najczęściej dochodziło do kolizji bocznej lub tylnej, a ponad 30% zdarzeń miało miejsce w miastach wojewódzkich.</p>
+
+        <h4>Wypadki z udziałem rowerów (2007-2022)</h4>
+        <p>W 2011 roku, <a href="https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=wdu20110920530" target="_blank">ustawą</a> z dnia 1 kwietnia 2011 r. zostały wprowadzone zmiany dotyczące korzystania z dróg przez rowerzystów. Ustawa weszła w życie 21 maja 2011 r. wprowadzając dużo istotnych zmian dotyczących rowerzystów i kierowców oraz ich wspólnego korzystania z dróg. Najistotniejszą było to, iż podczas skręcania w drogę poprzeczną, kierowca powinien ustąpić pierwszeństwa rowerzyście, który jedzie drogą rowerową wzdłuż drogi. Dopuszczono wyprzedzanie przez rowerzystów wolniej jadących pojazdów z ich prawej strony (np. w korkach). Rowerzysta odtąd miał prawo jechać środkiem pasa ruchu na skrzyżowaniu, dzięki czemu ograniczał ryzyko wyprzedzenia go ze zbyt małą odległością. Dopuszczone zostało korzystanie z rowerowych wózków dla np. dzieci. Dopuszczono jazdę rowerzystów obok siebie, jeżeli nie utrudnia to ruchu innym pojazdom. Wprowadzono również wydzielone z jezdni pasy ruchu dla rowerów oraz śluzy rowerowe.</p>
+        <div class="row w-100">
+          <div class="col-11">
+              <div class="w-100" style="height: 300px;" id="bicycle-accidents"></div>
+          </div>
+        </div>
+
+        <p>Liczba zdarzeń z udziałem rowerów jest okresowo zmienna - zależy od pogody, która to wpływa na liczbę rowerzystów na drogach. <strong>Nie można zaobserwować spadku w bezwzględnej liczbie wypadków po omawianej nowelizacji kodeksu drogowego</strong>. Podobnie sprawa się ma, jeśli sprawdzimy udział wypadków, w których uczestniczyli rowerzyści, do całkowitej liczby wypadków.</p>
+        <div class="row" id="bicycle-stats">
+          <div class="col">
+            <table class="table small w-100">
+              <thead>
+                <tr class="table-secondary">
+                  <th>Okres</th>
+                  <th class="text-center">Średniomiesięczna liczba wypadków z udziałem rowerów</th>
+                  <th class="text-center">Obrażenia ciężkie lub śmierć w wyniku zdarzeń (średnio / miesiąc)</th>
+                  <th class="text-center">Średni udział wypadków z udziałem rowerów w całkowitej liczbie wypadków</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>rok poprzedzający wejście zmian w przepisach<br>(21/05/2010 - 20/05/2011)</td>
+                  <td class="text-center">850</td>
+                  <td class="text-center">15</td>
+                  <td class="text-center">2.3%</td>
+                </tr>
+                <tr>
+                  <td>rok od wejścia zmian w przepisach<br>(21/05/2011 - 20/05/2012)</td>
+                  <td class="text-center">994</td>
+                  <td class="text-center">16</td>
+                  <td class="text-center">3.0%</td>
+                </tr>
+                <tr>
+                  <td>w kolejnych latach<br>(21/05/2012 - 20/05/2022)</td>
+                  <td class="text-center">1140</td>
+                  <td class="text-center">17</td>
+                  <td class="text-center">3.2%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h4>Wypadki pod wpływem alkoholu (2007-2022)</h4>
+        <p>20 marca 2015 r. zaostrzono <a href="https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20150000541" target="_blank">przepisy</a> dotyczące prowadzenia pojazdu pod wpływem alkoholu. Za pomocą tej nowelizacji zwiększone zostały kary finansowe i zakres sytuacji, w których Policja może pozbawić kierowcę prawa jazdy. Zmiany szczególnie mocno dotknęły kierowców prowadzących pod wpływem alkoholu. Czyn taki został zagrożony karą do 10 tys. zł (płatną na rzecz Funduszu Pomocy Pokrzywdzonym). Dodatkowo, jeżeli kogoś skazano już za to przestępstwo to sąd mógł odtąd orzec dożywotni zakaz prowadzenia pojazdów – a jego złamanie stało się przestępstwem zagrożonym pozbawieniem wolności do 2 lat. Z kolei przy jednorazowym czynie sąd może orzec zakaz prowadzenia pojazdu od 2 do nawet 15 lat.</p>
+        <div class="row">
+          <div class="col-11">
+              <div class="w-100" style="height: 300px;" id="alcohol-accidents"></div>
+          </div>
+        </div>
+
+        <p>Zaostrzenie przepisów wprowadzono w czasie, gdy ilość zdarzeń z uczestnikami pod wpływem alkoholu była znacznie niższa niż w latach poprzednich. Rok później rozpoczął się ponowny wzrost odnotowanych przypadków tego typu. <strong>Nie można zatem stwierdzić spadku liczby zdarzeń po tejże nowelizacji</strong>.</p>
+        <div class="row" id="alcohol-stats">
+          <div class="col-11">
+            <table class="table small w-100">
+              <thead>
+                <tr class="table-secondary">
+                  <th>Okres</th>
+                  <th class="text-center">Średniomiesięczna liczba wypadków z udziałem kierowców pod wpływem alkoholu</th>
+                  <th class="text-center">Obrażenia ciężkie lub śmierć w wyniku zdarzeń (średnio / miesiąc)</th>
+                  <th class="text-center">Średni udział wypadków z udziałem kierowców pod wpływem alkoholu w całkowitej liczbie wypadków</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>rok poprzedzający wejście zmian w przepisach<br>(18/05/2014 - 17/05/2015)</td>
+                  <td class="text-center">853</td>
+                  <td class="text-center">14</td>
+                  <td class="text-center">2.6%</td>
+                </tr>
+                <tr>
+                  <td>rok od wejścia zmian w przepisach<br>(18/05/2015 - 17/05/2016)</td>
+                  <td class="text-center">774</td>
+                  <td class="text-center">11</td>
+                  <td class="text-center">2.3%</td>
+                </tr>
+                <tr>
+                  <td>w kolejnych latach<br>(18/05/2016 - 17/05/2022)</td>
+                  <td class="text-center">955</td>
+                  <td class="text-center">8</td>
+                  <td class="text-center">2.5%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h4>Wypadki na przejściach dla pieszych (2007-2022)</h4>
+        <p>1 czerwca 2021 roku weszły w życie <a href="https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20210000463" target="_blank">zmiany w przepisach</a> dotyczących przechodzenia przez przejście dla pieszych. Artykuł 13 Ustawy Prawo o ruchu drogowym zmienił brzmienie w dość istotny sposób. Przed zmianami pierwszeństwo miał pieszy, który już znajdował się na przejściu. Kierujący pojazdem musiał mu to umożliwić, czyli zatrzymać się i przepuścić. Jeśli żaden z pojazdów nie ustąpił pieszemu, nie mogło być mowy o pierwszeństwie. Ustawodawca uznał, że to niedostateczna ochrona i po zmianie przepisów pieszy ma pierwszeństwo zanim wejdzie na jezdnię lub torowisko. Jeżeli tylko pieszy zdradza chęć wejścia na przejście, kierujący pojazdem powinien się zatrzymać. Nowelizacja ta miała na celu zwiększenie bezpieczeństwa pieszych na przejściach dla pieszych poprzez zwiększenie ich praw.</p>
+        <div class="row">
+          <div class="col-11">
+              <div class="w-100" style="height: 300px;" id="pedestrians-accidents"></div>
+          </div>
+        </div>
+        <h6 class="pt-3">Dzienna liczba wypadków na przejściach dla pieszych w roku 2022 na tle pozostałych lat</h6>
+        <div class="row">
+          <div class="col-11">
+              <div class="w-100" style="height: 300px;" id="pedestrians-accidents-by-days"></div>
+          </div>
+        </div>
+
+        <p>Nowe przepisy zostały wprowadzone w trakcie pandemii COVID-19, niedługo po zniesieniu obostrzeń z 25 marca 2021 (m. in. ponowne otwarcie żłobków i przedszkoli). Liczba wypadków z udziałem pieszych na przejściach dla pieszych zmniejszyła się istotnie już w 2020 r. Jednak zdecydowanie bardziej w okresie jesienno-zimowym. Czy to kwestia nowych przepisów, czy też zmniejszonego natężenia ruchu lub łagodniejszych warunków pogodowych?</p>
+        <p>Z dużą pewnością warunki na drogach mają wpływ na liczbę wypadków. Aby oszacować tenże wpływ na liczbę analizowanych wypadków na przejściach dla pieszych, wyliczam współczynnik korelacji Pearsona dla wybranych miar warunków pogodowych i drogowych.</p>
+
+        <table class="table small w-50">
+          <thead class="table-secondary">
+            <tr><th>Zmienna</th><th>r-Pearson</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Średnia miesięczna temperatura maksymalna</td><td>-0.59</td></tr>
+            <tr><td>Średnia miesięczna temperatura minimalna</td><td>-0.50</td></tr>
+            <tr><td>Średnia miesięczna temperatura dzienna</td><td>-0.56</td></tr>
+            <tr><td>Średnia miesięczna temperatura minimalna przy gruncie</td><td>-0.42</td></tr>
+            <tr><td>Średni miesięczna suma opadów</td><td>-0.17</td></tr>
+            <tr><td>Liczba dni z pokrywą śnieżną w miesiącu</td><td>0.29</td></tr>
+            <tr><td>Liczba dni z opadem deszczu w miesiącu</td><td>-0.11</td></tr>
+            <tr><td>Liczba dni z opadem śniegu miesiącu</td><td>0.42</td></tr>
+            <tr><td>Średnia miesięczna dobowego ruchu pojazdów</td><td>-0.26</td></tr>
+          </tbody>
+        </table>
+        <p>
+          Mimo, że empirycznie zasadność doboru zmiennych ma sens, to współczynnik Pearsona tylko dla 5 z 9 wskazuje na umiarkowaną korelację, dla pozostałych 4 na słabą. Czy odpowiednia kombinacja zmiennych może wpływać na liczbę wypadków? Przykładowo opad deszczu przy temperaturze bliskiej zeru stopni powoduje gołoledź, a tym samym trudne warunki drogowe - co bez wątpienia zwiększa liczbę wypadków na terenie dotkniętym tym zjawiskiem.
+          Aby zbadać wpływ wielu zmiennych na zmienną docelową, w tym przypadku liczbę wypadków, użyję dwóch popularnych metod uczenia maszynowego.
+          <ul>
+            <li>Random Forest (las losowy),</li>
+            <li>Linear Regression (regresja liniowa).</li>
+          </ul>
+        </p>
+        <p>
+          Wyszkolę modele na danych z lat 2012-2019 aby ująć wpływ zmiennych pogodowych i ruchu drogowego, a pominąć wpływ lockdownów (2020, 2021) i nowych przepisów kodeksu drogowego (2021).
+          W kolejnym kroku wykorzystam modele do prognozowania liczby wypadków w latach 2020-2022 i porównam rzeczywiste wyniki do prognoz, aby ocenić wpływ zarówno pandemii jak i zmian w prawie.
+        </p>
+
+        <h5>Porównanie rzeczywistej liczby wypadków do prognozy <em><span id="prediction-model-name">RandomForest</span></em></h5>
+        <div class="row pt-3">
+          <div class="col-11">
+              <div class="w-100" style="height: 300px;" id="pedestrians-predicted-accidents-random-forest"></div>
+          </div>
+        </div>
+        <h5 class="pt-3">Porównanie rzeczywistej liczby wypadków do prognozy <em><span id="prediction-model-name">LinearRegression</span></em></h5>
+        <div class="row pt-3">
+          <div class="col-11">
+              <div class="w-100" style="height: 300px;" id="pedestrians-predicted-accidents-linear-regression"></div>
+          </div>
+        </div>
+        <p class="pt-2">Miary jakości prognozy dla lat 2012-2019, w przypadku obu modeli są wysokie. Błąd średniokwadratowy dla modelu RandomForest wynosi 3860, a współczynnik determinacji R² - 0.92. Dla modelu regresji liniowej odpowiednio 2513 i 0.95. RandomForest, podobnie jak inne metody oparte na drzewach decyzyjnych, ma trudności z ekstrapolacją do punktów danych niedoreprezentowanych w danych szkoleniowych, stąd niedoszacowanie wartości szczytowych. Podobnie w przypadku regresji liniowej, jako że model ten zakłada ściśle liniową zależność pomiędzy zmiennymi, a dane, które wykorzystałem takie nie są, predykcje wartości najniższych są odzwierciedlone błędnie.</p>
+        <p>
+          Oba modele (trenowane na danych z lat 2012-2019) wskazują prognozują wyższą liczbę analizowanych wypadków po wejściu przepisów w życie, <strong>co może świadczyć o pozytywnym wpływie nowego prawa na liczbę wypadków</strong>. Zwrócę jednak uwagę na fakt, że aby dokładniej uargumentować tę tezę, należałoby zbadać korelację liczby zdarzeń do warunków pogodowych i drogowych w ujęciu dziennym, najlepiej w bliskim dystansie do stacji pomiaru pogody.
+          Niezależnie od siły dowodu na spadek liczby wypadków na przejściach dla pieszych, bardzo trudnym byłoby jednoznaczne stwierdzenie, że jest to zasługa wyłącznie przepisów wprowadzonych 1 czerwca 2021 r. Nie można pominąć wpływu zarówno pandemii i związanej z nią zmiany zachowań ludzi i znaczącej aktualizacji taryfikatora mandatów z 1 stycznia 2022 r.
+        </p>
+
+        <h4>Bonus. Czy policjanci dostają mandaty?</h4>
+        <p>W przypadku wypadku z winy kierowcy, jeśli kierowcą jest zwykły obywatel, w 6% przypadków otrzymuje pouczenie, a w niemal 70% zostaje ukarany mandatem. Jeśli kierowcą zaś jest policjant, ma 50% szans na pouczenie, a tylko w 37% przypadków otrzymuje mandat - to niemal 2 razy mniej mandatów niż dla zwykłych obywateli.</p>
+        <div class="row">
+          <div class="col-11">
+              <div class="w-100" style="height: 300px;" id="police-penalties"></div>
+          </div>
+        </div>
+        <br>
+
+        <h4>Definicje</h4>
+        <div class="pt-1" id="pearson-definition">
+          <strong>Współczynnik korelacji Pearsona</strong>
+          <div class="my-2 w-100 border-bottom"></div>
+          <p>Określa poziom zależności liniowej między zmiennymi losowymi. Wartość współczynnika mieści się w przedziale od -1 do 1, gdzie 1 oznacza całkowitą dodatnią korelację liniową, 0 oznacza brak korelacji liniowej, a -1 oznacza całkowitą ujemną korelację liniową.
+          Poniżej wzór na współczynnik korelacji Pearsona r pomiędzy dwiema zmiennymi X i Y.</p>
+          <p>$$
+            r = \frac{\sum (X_i - \bar{X})(Y_i - \bar{Y})}{\sqrt{\sum (X_i - \bar{X})^2 \sum (Y_i - \bar{Y})^2}}
+          $$</p>
+          <ul>
+            <li>\(X_i\) i \(Y_i\) to indywidualne punkty próbkowania indeksowane poprzez i,</li>
+            <li>\(\bar{X}\) i \(\bar{Y}\) są średnimi zmiennych X i Y,</li>
+            <li>licznik reprezentuje kowariancję między X i Y,</li>
+            <li>mianownik jest iloczynem odchyleń standardowych X i Y.</li>
+          </ul>
+          Należy zauważyć, że korelacja Pearsona mierzy jedynie zależności liniowe i może błędnie opisywać lub nie wykrywać zależności nieliniowych. Ponadto korelacja nie implikuje związku przyczynowego - sugeruje jedynie stopień powiązania między dwiema zmiennymi.
+          Porównując różne przedziały wartości bezwzględnych współczynnika r-Pearsona, stosowane do interpretowania uzyskanych wyników, musimy wziąć pod uwagę dziedzinę nauki, w której prowadzimy badania. Inny wynik korelacji uznamy za mocny w medycynie, a inny w socjologii.
+          Przykładowo, dla nauk społecznych idealna korelacja to współczynnik równy 1, mocna - 0.6 do 0.9, umiarkowana - 0.4 - 0.6, słaba - poniżej 0.3, a 0 to całkowity brak korelacji.
+        </div>
+
+        <div class="pt-3" id="random-forest-definition">
+          <strong>Algorytm Random Forest</strong>
+          <div class="my-2 w-100 border-bottom"></div>
+          <p>
+           Opiera się na koncepcji drzew decyzyjnych, ale zamiast polegać na jednym drzewie decyzyjnym, tworzy z nich „las”. Każde drzewo w lesie jest zbudowane na podstawie losowej próbki zbioru danych uczących, a w każdym węźle wybierany jest losowo podzbiór cech w celu określenia podziału. Ostateczna prognoza jest dokonywana poprzez agregację prognoz ze wszystkich drzew w lesie. Takie podejście znacząco zwiększa dokładność modelu w porównaniu z indywidualnymi drzewami decyzyjnymi. Proces szkolenia modelu możemy opisać w następujących krokach.
+          </p>
+          <ul>
+            <li>Bootstrap Aggregating (Bagging)</li>
+            <li>Feature Randomness</li>
+            <li>Aggregation</li>
+          </ul>
+          <br>
+          RandomForest jest ceniony za wysoką dokładność, odporność na nadmierne dopasowanie (overfitting) i zdolność do obsługi dużych, wielowymiarowych zbiorów danych. Jest również wyjaśnialną (explainable) metodą uczenia maszynowego.
+        </div>
+
+        <div class="pt-3" id="linear-regression-definition">
+          <strong>Regresja liniowa</strong>
+          <div class="my-2 w-100 border-bottom"></div>
+          To metody oparte o liniowe kombinacje zmiennych i parametrów dopasowujących model do danych. Dopasowana linia lub krzywa regresji reprezentuje oszacowaną wartość oczekiwaną zmiennej przy konkretnych wartościach innej zmiennej lub zmiennych.
+          <p>$$
+            y = \beta_0 + \beta_1x_1 + \beta_2x_2 + ... + \beta_nx_n + \epsilon
+          $$</p>
+          <ul>
+            <li>\(y\) to zmienna zależna,</li>
+            <li>\(x_1, x_2, ..., x_n\) to zmienne niezależne,</li>
+            <li>\(\beta_0\) to wyraz wolny,</li>
+            <li>\(\beta_1, \beta_2, ..., \beta_n\) to współczynniki zmiennych niezależnych,</li>
+            <li>\(\epsilon\) jest składnikiem losowym błędu.</li>
+          </ul>
+          <br>
+          Podstawowym celem regresji liniowej jest znalezienie najlepiej dopasowanej linii przechodzącej przez punkty danych, która minimalizuje różnice między wartościami obserwowanymi a wartościami przewidywanymi przez model.
+        </div>
+
+        <div class="pt-3" id="mse-definition">
+          <strong>Regresja liniowa</strong> (Mean Squared Error / MSE)
+          <div class="my-2 w-100 border-bottom"></div>
+          <p>Jest wartością oczekiwaną kwadratu „błędu”, czyli różnicy między estymatorem a wartością przewidywaną. Im niższy MSE, tym lepsze dopasowanie modelu do danych.</p>
+          <p>$$
+            \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+          $$</p>
+          <ul>
+            <li>\(n\) to liczba obserwacji,</li>
+            <li>\(y_i\) to rzeczywista wartość obserwacji,</li>
+            <li>\(\hat{y}_i\) to przewidywana wartość.</li>
+          </ul>
+          MSE to prostą metrykę służąca m.in. do porównywania modeli, ten o najniższym MSE jest zwykle uważany za najdokładniejszy. Ponieważ jednak MSE jest wyrażone w kwadratach jednostek zmiennej wynikowej, bezpośrednia interpretacja wielkości błędów może czasami stanowić wyzwanie.
+        </div>
+
+        <div class="pt-3" id="r2-definition">
+          <strong>Współczynnik determinacji R²</strong>
+          <div class="my-2 w-100 border-bottom"></div>
+          <p>Jest miarą statystyczną reprezentującą proporcję wariancji zmiennej zależnej wyjaśnionej przez zmienne niezależne w modelu regresji. Dostarcza informacji o stopniu dopasowania modelu. R² równy 1 wskazuje, że przewidywania doskonale pasują do danych.</p>
+          <p>$$
+            R^2 = 1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} (y_i - \bar{y})^2}
+          $$</p>
+          <ul>
+            <li>\(y_i\) to rzeczywista wartość obserwacji,</li>
+            <li>\(\hat{y}_i\) to przewidywana wartość,</li>
+            <li>\(\bar{y}\) to średnia arytmetyczna rzeczywistych wartości.</li>
+          </ul>
+          R² jest miarą tego, jak dobrze wyniki obserwacji są replikowane przez model. Miara ta często jest interpretowana jako procent zmienności, który jest wyjaśniany przez model.
+          Wartości R² mieszczą się w przedziale od 0 do 1, gdzie wyższa wartość oznacza lepsze dopasowanie modelu do danych.
+        </div>
+
+        <h4 class="pt-3">Żródła</h4>
+        <p class="mb-1">Dane</p>
+        <div class="border-bottom w-100 px-1 mb-1"></div>
+
+        <ol style="padding-left: 18px;">
+          <li><a href="https://sewik.pl/" target="_blank">Dane Systemu Ewidencji Wypadków i Kolizji udostępnione przez Komendę Główną Policji w Warszawie</a>. Zakres od 2007-01-01 do 2022-12-31.</li>
+          <li><a href="https://dane.imgw.pl/" target="_blank">Dane Pomiarowo obserwacyjne udostępnione przez Instytut Meteorologii i Gospodarki Wodnej</a>. Zakres od 2007-01-01 do 2022-12-31.</li>
+          <li><a href="https://www.archiwum.gddkia.gov.pl/pl/" target="_blank">Dane Stacji Ciągłych Pomiarów Ruchu udostępnione przez Generalną Dyrekcję Dróg Krajowych i Autostrad</a>. Zakres od 2012-01-01 do 2022-12-31.</li>
+        </ol>
+
+        <p class="mb-1">Prawo</p>
+        <div class="border-bottom w-100 px-1 mb-1"></div>
+        <ol style="padding-left: 18px;">
+          <li><a href="https://sip.lex.pl/akty-prawne/dzienniki-resortowe/metody-i-formy-prowadzenia-przez-policje-statystyki-zdarzen-drogowych-35010522" target="_blank">Zarządzenie Nr 31 Komendanta Głównego Policji z dnia 22 października 2015 r. w sprawie metod i form prowadzenia przez Policję statystyki zdarzeń drogowych</a></li>
+          <li><a href="https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=wdu20110920530" target="_blank">Ustawa z dnia 1 kwietnia 2011 r. o zmianie ustawy - Prawo o ruchu drogowym oraz ustawy o kierujących pojazdami</a></li>
+          <li><a href="https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20150000541" target="_blank">Ustawa z dnia 20 marca 2015 r. o zmianie ustawy - Kodeks karny oraz niektórych innych ustaw</a></li>
+          <li><a href="https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20210000463" target="_blank">Ustawa z dnia 25 lutego 2021 r. o zmianie ustawy - Prawo o ruchu drogowym</a></li>
+        </ol>
+        <br>
+
+    </div>
+
+
+    <script type="module">
+      var charts = ["total-accidents", "bicycle-accidents", "alcohol-accidents", "pedestrians-accidents"];
+      var settings_dict = {
+        "total-accidents": {
+          "by-months": {
+            "remarks": [{
+                  "type": "area",
+                  "date-from": new Date("2020-03-14"),
+                  "date-to": new Date("2022-05-15"),
+                  "text-upper": "Stan epidemii",
+                  "text-lower": "(14/03/2020 - 15/05/2022)",
+                  "text-position": "middle-bottom",
+                },],
+            "legend-position": "left-bottom"
+          },
+          "by-days": {
+            "remarks": [{
+                  "type": "area",
+                  "years": [2020],
+                  "date-from": new Date("2021-03-14"),
+                  "date-to": new Date("2021-04-20"),
+                  "text-upper": "Lockdown",
+                  "text-lower": "(14/03/2020 - 20/04/2020)",
+                  "text-position": "middle-bottom",
+                },
+              ],
+            "legend-position": "right-bottom"
+          },
+        },
+        "bicycle-accidents": {
+          "by-months": {
+            "remarks": [{
+                  "type": "line",
+                  "date": new Date("2011-05-21"),
+                  "text-upper": "Data wejścia w życie",
+                  "text-lower": "21/05/2011",
+                  "text-position": "start-top",
+                },
+              ],
+            "legend-position": "left-top"
+          },
+          "by-days": {
+            "remarks": [],
+            "legend-position": "left-top"
+          },
+        },
+        "alcohol-accidents": {
+          "by-months": {
+            "remarks": [{
+                  "type": "line",
+                  "date": new Date("2015-05-18"),
+                  "text-upper": "Data wejścia w życie",
+                  "text-lower": "18/05/2015",
+                  "text-position": "start-top",
+                },
+              ],
+            "legend-position": "left-bottom"
+          },
+          "by-days": {
+            "remarks": [],
+            "legend-position": "right-top"
+          },
+        },
+        "pedestrians-accidents": {
+          "by-months": {
+            "remarks": [{
+                  "type": "line",
+                  "date": new Date("2021-06-01"),
+                  "text-upper": "Data wejścia w życie",
+                  "text-lower": "01/06/2021",
+                  "text-position": "start-top",
+                },
+              ],
+            "legend-position": "left-top"
+          },
+          "by-days": {
+            "remarks": [],
+            "legend-position": "left-top"
+          },
+        },
+        "pedestrians-predicted-accidents": {
+          "by-months": {
+            "remarks": [{
+                  "type": "line",
+                  "date": new Date("2021-06-01"),
+                  "text-upper": "Data wejścia w życie",
+                  "text-lower": "01/06/2021",
+                  "text-position": "start-top",
+                },
+              ],
+            "legend-position": "left-top"
+          },
+        },
+      }
+
+      for (var i = 0; i < charts.length; i++) {
+        $("." + charts[i] + ".highlight-year-container").hide()
+      }
+
+      import { load_accident_counts_by_months } from '../../js/charts.js';
+      import { unload_accident_counts_by_months } from '../../js/charts.js';
+      import { load_accident_counts_by_days } from '../../js/charts.js';
+      import { unload_accident_counts_by_days } from '../../js/charts.js';
+      import { change_accident_counts_by_days } from '../../js/charts.js';
+      import { load_accidents_by_types } from '../../js/charts.js';
+      import { load_predicted_accident_counts_by_months } from '../../js/charts.js';
+      import { load_police_penalties_chart } from '../../js/charts.js';
+
+
+      $(document).ready(function() {
+        // functions
+
+        // presentation order
+        load_accident_counts_by_months(
+          "../../data/total-accidents-by-days.csv",
+          "total-accidents",
+          settings_dict["total-accidents"]["by-months"],
+        );
+        load_accident_counts_by_days(
+            "../../data/total-accidents-by-days.csv",
+            "total-accidents-by-days",
+            2020,
+            settings_dict["total-accidents"]["by-days"]
+        );
+
+        load_accidents_by_types("../../data/accidents-by-types.csv");
+
+        load_accident_counts_by_months(
+          "../../data/bicycle-accidents-by-days.csv",
+          "bicycle-accidents",
+          settings_dict["bicycle-accidents"]["by-months"],
+        );
+
+        load_accident_counts_by_months(
+          "../../data/alcohol-accidents-by-days.csv",
+          "alcohol-accidents",
+          settings_dict["alcohol-accidents"]["by-months"],
+        );
+
+        load_accident_counts_by_months(
+          "../../data/pedestrians-accidents-by-days.csv",
+          "pedestrians-accidents",
+          settings_dict["pedestrians-accidents"]["by-months"],
+        );
+        load_accident_counts_by_days(
+            "../../data/pedestrians-accidents-by-days.csv",
+            "pedestrians-accidents-by-days",
+            2022,
+            settings_dict["pedestrians-accidents"]["by-days"]
+        );
+
+        load_predicted_accident_counts_by_months.load(
+          "../../data/pedestrians-random-forest-predicted-accidents-by-months.csv",
+          "pedestrians-predicted-accidents-random-forest",
+          [new Date('2012-01-01'), new Date('2022-12-01')],
+          settings_dict["pedestrians-predicted-accidents"]["by-months"]
+        );
+        load_predicted_accident_counts_by_months.load(
+          "../../data/pedestrians-linear-regression-predicted-accidents-by-months.csv",
+          "pedestrians-predicted-accidents-linear-regression",
+          [new Date('2012-01-01'), new Date('2022-12-01')],
+          settings_dict["pedestrians-predicted-accidents"]["by-months"]
+        );
+
+        load_police_penalties_chart(
+          "../../data/police-penalties.csv",
+          "police-penalties"
+        )
+
+      });
+    </script>
+
+</body>
+</html>
