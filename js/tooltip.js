@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   links.forEach(link => {
     const tooltip = document.createElement('div');
     tooltip.className = 'tooltip';
-    tooltip.textContent = 'Kliknij mnie!';
+    tooltip.textContent = (window.location.href.includes("/en")) ? "Click me!" : "Kliknij mnie!";
     document.body.appendChild(tooltip);
 
     const setTooltipPosition = () => {
